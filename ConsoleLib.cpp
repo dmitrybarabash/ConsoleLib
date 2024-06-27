@@ -1,12 +1,12 @@
 /*********************************************************************/
 /*                                                                   */
-/*    ConsoleLib [Release 3.0.0]                                     */
-/*    Библиотека функций-оберток для работы с консолью               */
+/*    ConsoleLib [Release 3.0.1]                                     */
+/*    A library of wrapper functions for the Console Windows API.    */
 /*                                                                   */
-/*    Copyright (с) 2006-2019, Дмитрий Барабаш                       */
+/*    Copyright (c) 2006-2024, Dmitry Barabash                       */
 /*                                                                   */
 /*    E-mail:   dmitry@barabash.com                                  */
-/*    Web:      http://itstep.barabash.com                           */
+/*    Web:      https://www.barabash.com                             */
 /*                                                                   */
 /*********************************************************************/
 
@@ -17,11 +17,10 @@ using namespace std;
 #include "ConsoleLib.h"
 
 
-// Хендлы консоли
+// Console handles
 HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);
 
-// Возвращает ширину буфера консоли
 int GetConsoleBufferSizeX()
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -29,7 +28,7 @@ int GetConsoleBufferSizeX()
 	return csbi.dwSize.X;
 }
 
-// Возвращает высоту буфера консоли
+// Gets a height of console buffer
 int GetConsoleBufferSizeY()
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -37,14 +36,14 @@ int GetConsoleBufferSizeY()
 	return csbi.dwSize.Y;
 }
 
-// Устанавливает нужный размер буфера консоли
+// Set a size of console buffer
 void SetConsoleBufferSize(int x, int y)
 {
 	COORD conSize = { (SHORT)x, (SHORT)y };
 	SetConsoleScreenBufferSize(hStdOut, conSize);
 }
 
-// Возвращает ширину консоли
+// Gets a width of console
 int GetConsoleSizeX()
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -52,7 +51,7 @@ int GetConsoleSizeX()
 	return csbi.srWindow.Right + 1;
 }
 
-// Возвращает высоту консоли
+// Gets a height of console
 int GetConsoleSizeY()
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -60,14 +59,14 @@ int GetConsoleSizeY()
 	return csbi.srWindow.Bottom + 1;
 }
 
-// Устанавливает нужный размер консоли
+// Set a size of console and console buffer
 void SetConsoleSize(int x, int y)
 {
 	SMALL_RECT rect = { 0, 0, (SHORT)(x - 1), (SHORT)(y - 1) };
 	SetConsoleWindowInfo(hStdOut, TRUE, &rect);
 }
 
-// Очищает консоль
+// Clears console
 void ClearScreen()
 {
    COORD coordScreen = { 0, 0 };
@@ -76,22 +75,22 @@ void ClearScreen()
    DWORD dwConSize;
    DWORD dwConAttr;
 
-   // Получаем общее количество символов консоли и текущий цвет консоли
+   // Get the total number of console characters and the current colour of the console
    GetConsoleScreenBufferInfo(hStdOut, &csbi);
    dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
    dwConAttr = csbi.wAttributes;
 
-   // Заполняем консоль пробелами
+   // Fill the console with spaces
    FillConsoleOutputCharacter(hStdOut, ' ', dwConSize, coordScreen, &cCharsWritten);
-   // Заполняем консоль текущим цветом консоли
+   // Fill the console with the current console colour
    FillConsoleOutputAttribute(hStdOut, csbi.wAttributes, dwConSize, coordScreen, &cCharsWritten);
 
-   // Устанавливаем курсор в левый верхний угол консоли
+   // Move the cursor in the upper left corner of the console
    SetConsoleCursorPosition(hStdOut, coordScreen);
 }
 
-// Показывает/прячет текстовый курсор.
-// Возвращает предыдущий статус курсора.
+// Shows/hides cursor.
+// Gets a previous visibility of cursor.
 bool ShowCursor(bool visible)
 {
 	CONSOLE_CURSOR_INFO cci = { sizeof(cci) };
@@ -105,8 +104,8 @@ bool ShowCursor(bool visible)
 	return prevVisible;
 }
 
-// Устанавливает текущий цвет символов и фона.
-// Возвращает предыдущий текущий цвет символов и фона.
+// Sets a current foreground and background colors.
+// Gets a previous foreground and background colors as a color attribute.
 unsigned SetColor(unsigned colorAttr)
 {
     CONSOLE_SCREEN_BUFFER_INFO csbi = { sizeof(csbi) };
@@ -117,35 +116,35 @@ unsigned SetColor(unsigned colorAttr)
     return csbi.wAttributes;
 }
 
-// Устанавливает текущий цвет символов и фона.
-// Возвращает предыдущий текущий цвет символов и фона.
+// Sets a current foreground and background colors.
+// Gets a previous foreground and background colors as a color attribute.
 unsigned SetColor(ConsoleColor text, ConsoleColor background)
 {
     return SetColor((WORD)((background << 4) | text));
 }
 
-// Перемещает курсор в заданную позицию
+// Moves the cursor to the specified coordinates
 void GotoXY(int x, int y)
 {
     COORD coord = { (SHORT)x, (SHORT)y };
     SetConsoleCursorPosition(hStdOut, coord);
 }
 
-// Выводит заданную строку в заданную позицию
+// Prints the string at the specified coordinates
 void WriteStr(int x, int y, const char *str)
 {
     GotoXY(x, y);
     cout << str << flush;
 }
 
-// Выводит заданный символ в заданную позицию
+// Prints the character at the specified coordinates
 void WriteChar(int x, int y, char ch)
 {
 	GotoXY(x, y);
 	cout << ch;
 }
 
-// Выводит заданный символ в заданном количестве, начиная с заданной позиции
+// Prints the number of the character starting at the specified position
 void WriteChars(int x, int y, char ch, unsigned length)
 {
 	GotoXY(x, y);
@@ -153,7 +152,7 @@ void WriteChars(int x, int y, char ch, unsigned length)
 		cout << ch;
 }
 
-// Меняет текстовые атрибуты указанного количества символов, начиная с заданной позиции
+// Changes the text attributes of the specified number of characters, starting at the specified position
 void ChangeTextAttr(int x, int y, ConsoleColor text, ConsoleColor background, unsigned length)
 {
 	COORD coord = { (SHORT)x, (SHORT)y };

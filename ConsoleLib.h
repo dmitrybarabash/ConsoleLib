@@ -1,12 +1,12 @@
 /*********************************************************************/
 /*                                                                   */
-/*    ConsoleLib [Release 3.0.0]                                     */
-/*    Библиотека функций-оберток для работы с консолью               */
+/*    ConsoleLib [Release 3.0.1]                                     */
+/*    A library of wrapper functions for the Console Windows API.    */
 /*                                                                   */
-/*    Copyright (с) 2006-2019, Дмитрий Барабаш                       */
+/*    Copyright (c) 2006-2024, Dmitry Barabash                       */
 /*                                                                   */
 /*    E-mail:   dmitry@barabash.com                                  */
-/*    Web:      http://itstep.barabash.com                           */
+/*    Web:      https://www.barabash.com                             */
 /*                                                                   */
 /*********************************************************************/
 
@@ -15,11 +15,11 @@
 
 #include <windows.h>
 
-// Хендлы консоли
+// Console handles
 extern HANDLE hStdOut;
 extern HANDLE hStdIn;
 
-// Цвета
+// Colors
 enum ConsoleColor
 {
 	Black         = 0,
@@ -37,52 +37,69 @@ enum ConsoleColor
 	LightRed      = 12,
 	LightMagenta  = 13,
 	Yellow        = 14,
-	White         = 15
+	White         = 15,
+
+	black         = 0,
+	blue          = 1,
+	green         = 2,
+	cyan          = 3,
+	red           = 4,
+	magenta       = 5,
+	brown         = 6,
+	light_gray    = 7,
+	dark_gray     = 8,
+	light_blue    = 9,
+	light_green   = 10,
+	light_cyan    = 11,
+	light_red     = 12,
+	light_magenta = 13,
+	yellow        = 14,
+	white         = 15
 };
 
-// Возвращает ширину буфера консоли
+// Gets a width of console buffer
 int GetConsoleBufferSizeX();
-// Возвращает высоту буфера консоли
+// Gets a height of console buffer
 int GetConsoleBufferSizeY();
-// Устанавливает нужный размер буфера консоли
+// Set a size of console buffer
 void SetConsoleBufferSize(int x, int y);
 
-// Возвращает ширину консоли
+// Gets a width of console
 int GetConsoleSizeX();
-// Возвращает высоту консоли
+// Gets a height of console
 int GetConsoleSizeY();
-// Устанавливает нужный размер консоли и буфера консоли
+// Set a size of console and console buffer
 void SetConsoleSize(int x, int y);
 
-// Очищает консоль
+// Clears console
 void ClearScreen();
 
-// Показывает/прячет текстовый курсор.
-// Возвращает предыдущий статус курсора.
+// Shows/hides cursor.
+// Gets a previous visibility of cursor.
 bool ShowCursor(bool visible);
 
-// Устанавливают текущий цвет символов и фона.
-// Возвращают предыдущий текущий цвет символов и фона.
+// Sets a current foreground and background colors.
+// Gets a previous foreground and background colors as a color attribute.
 unsigned SetColor(ConsoleColor text, ConsoleColor background);
 unsigned SetColor(unsigned colorAttr);
 
-// Перемещает курсор в заданную позицию
+// Moves the cursor to the specified coordinates
 void GotoXY(int x, int y);
 
-// Выводит заданную строку в заданную позицию
+// Prints the string at the specified coordinates
 void WriteStr(int x, int y, const char *str);
 
-// Выводит заданный символ в заданную позицию
+// Prints the character at the specified coordinates
 void WriteChar(int x, int y, char ch);
 
-// Выводит заданный символ в заданном количестве, начиная с заданной позиции
+// Prints the number of the character starting at the specified position
 void WriteChars(int x, int y, char ch, unsigned length);
 
-// Меняет текстовые атрибуты указанного количества символов, начиная с заданной позиции
+// Changes the text attributes of the specified number of characters, starting at the specified position
 void ChangeTextAttr(int x, int y, ConsoleColor text, ConsoleColor background, unsigned length);
 
 
-// Для тех, кто предпочитает snake-стиль
+// For those who prefer the snake style
 #define console_color ConsoleColor
 #define get_console_buffer_size_x GetConsoleBufferSizeX
 #define get_console_buffer_size_y GetConsoleBufferSizeY
